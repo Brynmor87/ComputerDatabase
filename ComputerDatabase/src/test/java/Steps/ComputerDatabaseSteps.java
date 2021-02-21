@@ -11,15 +11,16 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,9 +28,8 @@ public class ComputerDatabaseSteps {
     WebDriver driver;
     private Scenario scenario;
     WebDriverWait wait;
-    private static WebElement element = null;
     String compName = null;
-    String intDate = "00000100";
+    String intDate = null;
     String disDate = null;
     String companyName = null;
     String newIntDate = null;
@@ -41,11 +41,12 @@ public class ComputerDatabaseSteps {
     public void before(Scenario scenario) {
         this.scenario = scenario;
         System.setProperty("webdriver.chrome.driver", "C:\\Chromedriver\\chromedriver.exe");
-        //set the useAutomationExtension capability to false as causing error on machine 'Loading of unpacked extensions is disabled by the administrator.'
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("useAutomationExtension", false);
-        driver = new ChromeDriver(options);
-        //driver.manage().window().maximize();
+//        set the useAutomationExtension capability to false as causing error on machine 'Loading of unpacked extensions is disabled by the administrator.'
+//        ChromeOptions options = new ChromeOptions();
+//        options.setExperimentalOption("useAutomationExtension", false);
+//        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
 
@@ -113,7 +114,7 @@ public class ComputerDatabaseSteps {
     }
 
     @Then("the computer is added to the database")
-    public void the_computer_is_added_to_the_database() {
+    public void the_computer_is_added_to_the_database() throws ParseException {
         //Check on correct page
         wait.until(ExpectedConditions.elementToBeClickable(HomePage.filter_button(driver)));
 
@@ -130,83 +131,20 @@ public class ComputerDatabaseSteps {
         if (intDate.equals("-")) {
             newIntDate = "-";
         } else {
-            String idYear = intDate.substring(0, 4);
-            String idMonth = intDate.substring(5, 7);
-            String idDay = intDate.substring(8, 10);
-
-            String newIdMonth = null;
-
-            if (idMonth.equals("01")) {
-                newIdMonth = " Jan ";
-            } else if (idMonth.equals("02")) {
-                newIdMonth = " Feb ";
-            } else if (idMonth.equals("03")) {
-                newIdMonth = " Mar ";
-            } else if (idMonth.equals("04")) {
-                newIdMonth = " Apr ";
-            } else if (idMonth.equals("05")) {
-                newIdMonth = " May ";
-            } else if (idMonth.equals("06")) {
-                newIdMonth = " Jun ";
-            } else if (idMonth.equals("07")) {
-                newIdMonth = " Jul ";
-            } else if (idMonth.equals("08")) {
-                newIdMonth = " Aug ";
-            } else if (idMonth.equals("09")) {
-                newIdMonth = " Sep ";
-            } else if (idMonth.equals("10")) {
-                newIdMonth = " Oct ";
-            } else if (idMonth.equals("11")) {
-                newIdMonth = " Nov ";
-            } else {
-                newIdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newIntDate = idDay + newIdMonth + idYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(intDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newIntDate = sdf.format(d);
         }
 
         //Dis date
-
         if (disDate.equals("-")) {
             newDisDate = "-";
         } else {
-            String ddYear = disDate.substring(0, 4);
-            String ddMonth = disDate.substring(5, 7);
-            String ddDay = disDate.substring(8, 10);
-
-            String newDdMonth = null;
-
-            if (ddMonth.equals("01")) {
-                newDdMonth = " Jan ";
-            } else if (ddMonth.equals("02")) {
-                newDdMonth = " Feb ";
-            } else if (ddMonth.equals("03")) {
-                newDdMonth = " Mar ";
-            } else if (ddMonth.equals("04")) {
-                newDdMonth = " Apr ";
-            } else if (ddMonth.equals("05")) {
-                newDdMonth = " May ";
-            } else if (ddMonth.equals("06")) {
-                newDdMonth = " Jun ";
-            } else if (ddMonth.equals("07")) {
-                newDdMonth = " Jul ";
-            } else if (ddMonth.equals("08")) {
-                newDdMonth = " Aug ";
-            } else if (ddMonth.equals("09")) {
-                newDdMonth = " Sep ";
-            } else if (ddMonth.equals("10")) {
-                newDdMonth = " Oct ";
-            } else if (ddMonth.equals("11")) {
-                newDdMonth = " Nov ";
-            } else {
-                newDdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newDisDate = ddDay + newDdMonth + ddYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(disDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newDisDate = sdf.format(d);
         }
 
         //Check values
@@ -221,6 +159,7 @@ public class ComputerDatabaseSteps {
 
         String checkDisDate = HomePage.disDate_row1(driver).getText();
         Assert.assertEquals(checkDisDate, newDisDate);
+
 
     }
 
@@ -364,7 +303,7 @@ public class ComputerDatabaseSteps {
     }
 
     @Then("the computer is updated in the database")
-    public void the_computer_is_updated_in_the_database() {
+    public void the_computer_is_updated_in_the_database() throws ParseException {
         //Check on correct page
         wait.until(ExpectedConditions.elementToBeClickable(HomePage.filter_button(driver)));
 
@@ -381,83 +320,20 @@ public class ComputerDatabaseSteps {
         if (intDate.equals("-")) {
             newIntDate = "-";
         } else {
-            String idYear = intDate.substring(0, 4);
-            String idMonth = intDate.substring(5, 7);
-            String idDay = intDate.substring(8, 10);
-
-            String newIdMonth = null;
-
-            if (idMonth.equals("01")) {
-                newIdMonth = " Jan ";
-            } else if (idMonth.equals("02")) {
-                newIdMonth = " Feb ";
-            } else if (idMonth.equals("03")) {
-                newIdMonth = " Mar ";
-            } else if (idMonth.equals("04")) {
-                newIdMonth = " Apr ";
-            } else if (idMonth.equals("05")) {
-                newIdMonth = " May ";
-            } else if (idMonth.equals("06")) {
-                newIdMonth = " Jun ";
-            } else if (idMonth.equals("07")) {
-                newIdMonth = " Jul ";
-            } else if (idMonth.equals("08")) {
-                newIdMonth = " Aug ";
-            } else if (idMonth.equals("09")) {
-                newIdMonth = " Sep ";
-            } else if (idMonth.equals("10")) {
-                newIdMonth = " Oct ";
-            } else if (idMonth.equals("11")) {
-                newIdMonth = " Nov ";
-            } else {
-                newIdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newIntDate = idDay + newIdMonth + idYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(intDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newIntDate = sdf.format(d);
         }
 
         //Dis date
-
         if (disDate.equals("-")) {
             newDisDate = "-";
         } else {
-            String ddYear = disDate.substring(0, 4);
-            String ddMonth = disDate.substring(5, 7);
-            String ddDay = disDate.substring(8, 10);
-
-            String newDdMonth = null;
-
-            if (ddMonth.equals("01")) {
-                newDdMonth = " Jan ";
-            } else if (ddMonth.equals("02")) {
-                newDdMonth = " Feb ";
-            } else if (ddMonth.equals("03")) {
-                newDdMonth = " Mar ";
-            } else if (ddMonth.equals("04")) {
-                newDdMonth = " Apr ";
-            } else if (ddMonth.equals("05")) {
-                newDdMonth = " May ";
-            } else if (ddMonth.equals("06")) {
-                newDdMonth = " Jun ";
-            } else if (ddMonth.equals("07")) {
-                newDdMonth = " Jul ";
-            } else if (ddMonth.equals("08")) {
-                newDdMonth = " Aug ";
-            } else if (ddMonth.equals("09")) {
-                newDdMonth = " Sep ";
-            } else if (ddMonth.equals("10")) {
-                newDdMonth = " Oct ";
-            } else if (ddMonth.equals("11")) {
-                newDdMonth = " Nov ";
-            } else {
-                newDdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newDisDate = ddDay + newDdMonth + ddYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(disDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newDisDate = sdf.format(d);
         }
 
         //Check values
@@ -495,7 +371,7 @@ public class ComputerDatabaseSteps {
     }
 
     @Then("the computer retains the original values in the database")
-    public void the_computer_retains_the_original_values_in_the_database() {
+    public void the_computer_retains_the_original_values_in_the_database() throws ParseException {
         //return to home page
         driver.navigate().back();
         driver.navigate().back();
@@ -513,83 +389,20 @@ public class ComputerDatabaseSteps {
         if (intDate.equals("-")) {
             newIntDate = "-";
         } else {
-            String idYear = intDate.substring(0, 4);
-            String idMonth = intDate.substring(5, 7);
-            String idDay = intDate.substring(8, 10);
-
-            String newIdMonth = null;
-
-            if (idMonth.equals("01")) {
-                newIdMonth = " Jan ";
-            } else if (idMonth.equals("02")) {
-                newIdMonth = " Feb ";
-            } else if (idMonth.equals("03")) {
-                newIdMonth = " Mar ";
-            } else if (idMonth.equals("04")) {
-                newIdMonth = " Apr ";
-            } else if (idMonth.equals("05")) {
-                newIdMonth = " May ";
-            } else if (idMonth.equals("06")) {
-                newIdMonth = " Jun ";
-            } else if (idMonth.equals("07")) {
-                newIdMonth = " Jul ";
-            } else if (idMonth.equals("08")) {
-                newIdMonth = " Aug ";
-            } else if (idMonth.equals("09")) {
-                newIdMonth = " Sep ";
-            } else if (idMonth.equals("10")) {
-                newIdMonth = " Oct ";
-            } else if (idMonth.equals("11")) {
-                newIdMonth = " Nov ";
-            } else {
-                newIdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newIntDate = idDay + newIdMonth + idYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(intDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newIntDate = sdf.format(d);
         }
 
         //Dis date
-
         if (disDate.equals("-")) {
             newDisDate = "-";
         } else {
-            String ddYear = disDate.substring(0, 4);
-            String ddMonth = disDate.substring(5, 7);
-            String ddDay = disDate.substring(8, 10);
-
-            String newDdMonth = null;
-
-            if (ddMonth.equals("01")) {
-                newDdMonth = " Jan ";
-            } else if (ddMonth.equals("02")) {
-                newDdMonth = " Feb ";
-            } else if (ddMonth.equals("03")) {
-                newDdMonth = " Mar ";
-            } else if (ddMonth.equals("04")) {
-                newDdMonth = " Apr ";
-            } else if (ddMonth.equals("05")) {
-                newDdMonth = " May ";
-            } else if (ddMonth.equals("06")) {
-                newDdMonth = " Jun ";
-            } else if (ddMonth.equals("07")) {
-                newDdMonth = " Jul ";
-            } else if (ddMonth.equals("08")) {
-                newDdMonth = " Aug ";
-            } else if (ddMonth.equals("09")) {
-                newDdMonth = " Sep ";
-            } else if (ddMonth.equals("10")) {
-                newDdMonth = " Oct ";
-            } else if (ddMonth.equals("11")) {
-                newDdMonth = " Nov ";
-            } else {
-                newDdMonth = " Dec ";
-            }
-            ;
-
-            //Get Int Date in dd MMM yyyy format
-            newDisDate = ddDay + newDdMonth + ddYear;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(disDate);
+            sdf.applyPattern("dd MMM yyyy");
+            newDisDate = sdf.format(d);
         }
 
         //Check values
@@ -652,7 +465,7 @@ public class ComputerDatabaseSteps {
     public void remove_computers_before_test() {
         wait.until(ExpectedConditions.elementToBeClickable(HomePage.filter_button(driver)));
 
-        String results = null;
+        String results;
 
         int i = 1;
 
