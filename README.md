@@ -1,5 +1,8 @@
 # ComputerDatabase
-This project includes regression scripts for the Computer Database using a BDD framework with Cucumber and Selenium.
+This project includes scripts for the Computer Database. Automated regression scripts are included using a BDD framework with Cucumber and Selenium.
+
+# Approach and manual scripts
+The test approach and manual scripts are included in the 'Approach and Scripts.xlsx' file.
 
 # Installation
 
