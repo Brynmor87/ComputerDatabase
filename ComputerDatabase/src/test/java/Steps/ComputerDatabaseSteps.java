@@ -40,7 +40,7 @@ public class ComputerDatabaseSteps {
     //  @Before
     public void before(Scenario scenario) {
         this.scenario = scenario;
-        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\cucumber\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Chromedriver\\chromedriver.exe");
         //set the useAutomationExtension capability to false as causing error on machine 'Loading of unpacked extensions is disabled by the administrator.'
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("useAutomationExtension", false);
